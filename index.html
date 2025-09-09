@@ -22,10 +22,6 @@ svg {
     margin: 10px;
     transition: transform 0.2s;
 }
-svg.clicked {
-    transform: scale(1.2);
-    opacity: 0.5;
-}
 .ingredient, .step, .choice {
     font-size: 20px;
     margin: 20px 0;
@@ -52,6 +48,19 @@ svg.clicked {
 .utensilio span {
     margin-top: 5px;
     font-size: 16px;
+}
+button {
+    font-size:20px;
+    padding:10px 20px;
+    margin-top:20px;
+    cursor:pointer;
+    border-radius:8px;
+    border:none;
+    background:#ffb347;
+    color:#fff;
+}
+button:hover {
+    background:#ff914d;
 }
 </style>
 </head>
@@ -84,7 +93,7 @@ const utensilios = [
 ];
 
 // Ingredientes da massa (proporcional aos ovos)
-const ingredientes = [
+const ingredientesMassa = [
     {nome: "Açúcar refinado", pesoPorOvo: 67},
     {nome: "Leite semidesnatado", pesoPorOvo: 83},
     {nome: "Óleo vegetal", pesoPorOvo: 30},
@@ -94,18 +103,12 @@ const ingredientes = [
     {nome: "Sal", pesoPorOvo: 2}
 ];
 
-// Passos extras (forno, ovos, cobertura, montagem)
-const passosExtras = [
-    "Ligue o forno a 180°C antes de começar a adicionar os ingredientes.",
-    "Unte o molde com 10 g de margarina e polvilhar 10 g de farinha usando o pincel de silicone.",
-    "Adicione os ovos: {ovos} unidade(s).",
-    "Coloque a massa no molde.",
-    "Asse por 45 minutos a 180°C. Deixe esfriar antes de desenformar.",
-    "Prepare a cobertura passo a passo:",
-    "Derreta 20 g de margarina na panela e dissolva 30 g de cacau em pó.",
-    "Adicione 395 g de leite condensado e 200 g de creme de leite. Cozinhe até obter ponto de cobertura cremosa.",
-    "Deixe esfriar levemente e aplique sobre o bolo.",
-    "Finalize com 48 g de granulado de chocolate Melken."
+// Ingredientes da cobertura (valores fixos)
+const ingredientesCobertura = [
+    {nome: "Margarina", peso: 20},
+    {nome: "Cacau em pó 50%", peso: 30},
+    {nome: "Leite condensado", peso: 395},
+    {nome: "Creme de leite", peso: 200}
 ];
 
 function mostrarMisenplace() {
@@ -118,15 +121,13 @@ function mostrarMisenplace() {
             </div>`;
     });
     html += `<h3>Ingredientes que você vai usar:</h3><ul>` +
-        ingredientes.map(i => `<li>${i.nome}</li>`).join('') +
+        ingredientesMassa.map(i => `<li>${i.nome}</li>`).join('') +
+        `<li>Ovos (1, 2 ou 3 dependendo da sua fome)</li>` +
         `</ul>`;
 
-    // Adiciona botão "Vamos lá" abaixo do misenplace
-    html += `<button id="vamosLa" style="font-size:20px;padding:10px 20px;margin-top:20px;">Vamos lá</button>`;
-
+    html += `<button id="vamosLa">Vamos lá</button>`;
     content.innerHTML = html;
 
-    // Ao clicar no botão, vai para a seleção do tamanho da fome
     document.getElementById("vamosLa").addEventListener("click", mostrarFome);
 }
 
@@ -146,34 +147,50 @@ function mostrarFome() {
 }
 
 function mostrarProximoPasso() {
-    if (passoAtual < ingredientes.length) {
-        // Ingredientes da massa, um por um
-        let ing = ingredientes[passoAtual];
-        let div = document.createElement("div");
-        div.className = "ingredient";
-        let peso = Math.round(ing.pesoPorOvo * ovos / 5) * 5; // arredonda múltiplo de 5
-        div.innerText = `Adicione ${peso} g de ${ing.nome}`;
-        div.addEventListener("click", () => {
-            passoAtual++;
-            mostrarProximoPasso();
-        });
-        content.innerHTML = "";
-        content.appendChild(div);
+    // Sequência contínua de passos
+    const passos = [];
 
-    } else if (passoAtual - ingredientes.length < passosExtras.length) {
-        // Passos extras: forno, ovos (unidades), cobertura, granulado
-        let passo = passosExtras[passoAtual - ingredientes.length];
-        passo = passo.replace("{ovos}", ovos);
-        let div = document.createElement("div");
+    // 1) Ligar o forno
+    if(passoAtual === 0) {
+        passos.push("Ligue o forno a 180°C antes de começar a preparar a massa.");
+    }
+
+    // 2) Ingredientes da massa, um por um
+    ingredientesMassa.forEach(ing => {
+        let peso = Math.round(ing.pesoPorOvo * ovos / 5) * 5;
+        passos.push(`Adicione ${peso} g de ${ing.nome}`);
+    });
+
+    // 3) Ovos em unidades
+    passos.push(`Adicione os ovos: ${ovos} unidade(s)`);
+
+    // 4) Untar o molde
+    passos.push("Unte o molde com 10 g de margarina e polvilhe 10 g de farinha usando o pincel de silicone.");
+
+    // 5) Colocar a massa no molde e assar
+    passos.push("Coloque a massa no molde.");
+    passos.push("Asse por 45 minutos a 180°C. Deixe esfriar antes de desenformar.");
+
+    // 6) Cobertura passo a passo
+    ingredientesCobertura.forEach(ing => {
+        passos.push(`Adicione ${ing.peso} g de ${ing.nome} para a cobertura`);
+    });
+    passos.push("Cozinhe a cobertura até obter ponto cremoso.");
+    passos.push("Deixe esfriar levemente e aplique sobre o bolo.");
+
+    // 7) Granulado
+    passos.push("Finalize com 48 g de granulado de chocolate Melken.");
+
+    if (passoAtual < passos.length) {
+        const div = document.createElement("div");
         div.className = "step";
-        div.innerText = passo;
+        div.innerText = passos[passoAtual];
         div.addEventListener("click", () => {
             passoAtual++;
             mostrarProximoPasso();
         });
         content.innerHTML = "";
         content.appendChild(div);
-
     } else {
         content.innerHTML = "<h2>Seu Bolo de Chocolate com Brigadeiro está pronto! 🍫🍰</h2>";
     }
