@@ -120,16 +120,14 @@ function mostrarMisenplace() {
     html += `<h3>Ingredientes que você vai usar:</h3><ul>` +
         ingredientes.map(i => `<li>${i.nome}</li>`).join('') +
         `</ul>`;
+
+    // Adiciona botão "Vamos lá" abaixo do misenplace
+    html += `<button id="vamosLa" style="font-size:20px;padding:10px 20px;margin-top:20px;">Vamos lá</button>`;
+
     content.innerHTML = html;
 
-    document.querySelectorAll('.utensilio svg').forEach(svg => {
-        svg.addEventListener('click', () => {
-            svg.classList.add('clicked');
-            const todos = [...document.querySelectorAll('.utensilio svg')]
-                .every(s => s.classList.contains('clicked'));
-            if (todos) mostrarFome();
-        });
-    });
+    // Ao clicar no botão, vai para a seleção do tamanho da fome
+    document.getElementById("vamosLa").addEventListener("click", mostrarFome);
 }
 
 function mostrarFome() {
