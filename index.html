@@ -72,34 +72,37 @@ const bolo = document.getElementById('bolo');
 let ovos = 2; 
 let passoAtual = 0;
 
-// Utensílios
+// Utensílios incluindo panela, pincel de silicone e balança
 const utensilios = [
     {nome:"Bacia grande", svg:'<circle cx="32" cy="32" r="30" fill="#c0c0c0"/> <circle cx="32" cy="32" r="20" fill="#fff"/>'},
     {nome:"Espátula", svg:'<rect x="28" y="10" width="6" height="40" fill="#8B4513"/> <rect x="25" y="50" width="12" height="4" fill="#d2691e"/>'},
     {nome:"Forma de bolo", svg:'<rect x="12" y="20" width="40" height="20" fill="#ffa500" stroke="#d2691e" stroke-width="2"/>'},
-    {nome:"Fouet", svg:'<line x1="32" y1="10" x2="32" y2="50" stroke="#000" stroke-width="2"/><line x1="28" y1="50" x2="36" y2="50" stroke="#000" stroke-width="2"/>'}
+    {nome:"Fouet", svg:'<line x1="32" y1="10" x2="32" y2="50" stroke="#000" stroke-width="2"/><line x1="28" y1="50" x2="36" y2="50" stroke="#000" stroke-width="2"/>'},
+    {nome:"Pincel de silicone", svg:'<rect x="30" y="10" width="4" height="30" fill="#ff69b4"/><rect x="28" y="40" width="8" height="6" fill="#ff1493"/>'},
+    {nome:"Balança", svg:'<rect x="15" y="40" width="34" height="10" fill="#999"/><circle cx="32" cy="32" r="8" fill="#666"/>'},
+    {nome:"Panela", svg:'<rect x="16" y="20" width="32" height="24" fill="#888"/><rect x="24" y="10" width="16" height="10" fill="#555"/>'}
 ];
 
-// Ingredientes da massa (proporcional aos ovos)
+// Ingredientes da massa (proporcional aos ovos), exceto ovos
 const ingredientes = [
-    {nome: "Açúcar refinado", pesoPorOvo: 66.7},
-    {nome: "Ovos", pesoPorOvo: 50},
-    {nome: "Leite semidesnatado", pesoPorOvo: 83.3},
+    {nome: "Açúcar refinado", pesoPorOvo: 67},
+    {nome: "Leite semidesnatado", pesoPorOvo: 83},
     {nome: "Óleo vegetal", pesoPorOvo: 30},
-    {nome: "Cacau em pó 32%", pesoPorOvo: 26.7},
-    {nome: "Farinha de trigo", pesoPorOvo: 83.3},
+    {nome: "Cacau em pó 32%", pesoPorOvo: 27},
+    {nome: "Farinha de trigo", pesoPorOvo: 83},
     {nome: "Fermento químico", pesoPorOvo: 7},
-    {nome: "Sal", pesoPorOvo: 1.67}
+    {nome: "Sal", pesoPorOvo: 2}
 ];
 
 // Passos da receita
 const passosExtras = [
-    "Untar o molde com 10 g de margarina e polvilhar 10 g de farinha.",
-    "Pré-aqueça o forno a 180°C.",
+    "Ligue o forno a 180°C antes de começar a preparar a massa.",
+    "Unte o molde com 10 g de margarina e polvilhar 10 g de farinha usando o pincel de silicone.",
     "Misture todos os ingredientes da massa até ficar homogênea.",
+    "Adicione os ovos: {ovos} unidade(s).",
     "Coloque a massa no molde.",
     "Asse por 45 minutos a 180°C. Deixe esfriar antes de desenformar.",
-    "Prepare a cobertura: derreta 20 g de margarina e dissolva 30 g de cacau em pó.",
+    "Prepare a cobertura: derreta 20 g de margarina na panela e dissolva 30 g de cacau em pó.",
     "Adicione 395 g de leite condensado e 200 g de creme de leite. Cozinhe até obter ponto de cobertura cremosa.",
     "Deixe esfriar levemente e aplique sobre o bolo.",
     "Finalize com 48 g de granulado de chocolate Melken."
@@ -149,7 +152,7 @@ function mostrarProximoPasso() {
         let ing = ingredientes[passoAtual];
         let div = document.createElement("div");
         div.className = "ingredient";
-        let peso = (ing.pesoPorOvo * ovos).toFixed(1);
+        let peso = Math.round(ing.pesoPorOvo * ovos / 5) * 5; // arredondar para múltiplo de 5
         div.innerText = `Adicione ${peso} g de ${ing.nome}`;
         div.addEventListener("click", () => {
             passoAtual++;
@@ -159,6 +162,7 @@ function mostrarProximoPasso() {
         content.appendChild(div);
     } else if (passoAtual - ingredientes.length < passosExtras.length) {
         let passo = passosExtras[passoAtual - ingredientes.length];
+        passo = passo.replace("{ovos}", ovos);
         let div = document.createElement("div");
         div.className = "step";
         div.innerText = passo;
