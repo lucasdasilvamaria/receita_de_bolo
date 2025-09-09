@@ -3,63 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bolinho Interativo</title>
+<title>Pastel de Chocolate Interativo</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        padding: 20px;
-        background: #fff2e6;
-        color: #333;
-    }
-    h1, h2, h3 {
-        margin-bottom: 20px;
-    }
-    svg {
-        width: 100px;
-        height: 100px;
-        cursor: pointer;
-        margin: 10px;
-        transition: transform 0.2s;
-    }
-    svg.clicked {
-        transform: scale(1.2);
-        opacity: 0.5;
-    }
-    .ingredient, .step, .choice {
-        font-size: 20px;
-        margin: 20px 0;
-        cursor: pointer;
-        padding: 10px;
-        border-radius: 8px;
-        background: #ffedcc;
-        transition: background 0.3s;
-    }
-    .ingredient:hover, .step:hover, .choice:hover {
-        background: #ffd699;
-    }
-    .utensilios-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .utensilio {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 10px;
-    }
-    .utensilio span {
-        margin-top: 5px;
-        font-size: 16px;
-    }
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    background: #fff2e6;
+    color: #333;
+}
+h1, h2 {
+    margin-bottom: 20px;
+}
+svg {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    margin: 10px;
+    transition: transform 0.2s;
+}
+svg.clicked {
+    transform: scale(1.2);
+    opacity: 0.5;
+}
+.ingredient, .step, .choice {
+    font-size: 20px;
+    margin: 20px 0;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 8px;
+    background: #ffedcc;
+    transition: background 0.3s;
+}
+.ingredient:hover, .step:hover, .choice:hover {
+    background: #ffd699;
+}
+.utensilios-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.utensilio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+.utensilio span {
+    margin-top: 5px;
+    font-size: 16px;
+}
 </style>
 </head>
 <body>
 
-<h1>Vamos fazer um bolinho?</h1>
+<h1>Vamos fazer um Pastel de Chocolate?</h1>
 <svg id="bolo" viewBox="0 0 64 64">
-  <circle cx="32" cy="32" r="30" fill="#f4a460" stroke="#d2691e" stroke-width="4"/>
+  <circle cx="32" cy="32" r="30" fill="#d2691e" stroke="#8B4513" stroke-width="4"/>
   <circle cx="32" cy="32" r="20" fill="#fff0d4"/>
 </svg>
 
@@ -72,6 +72,7 @@ const bolo = document.getElementById('bolo');
 let ovos = 2; 
 let passoAtual = 0;
 
+// Utensílios
 const utensilios = [
     {nome:"Bacia grande", svg:'<circle cx="32" cy="32" r="30" fill="#c0c0c0"/> <circle cx="32" cy="32" r="20" fill="#fff"/>'},
     {nome:"Espátula", svg:'<rect x="28" y="10" width="6" height="40" fill="#8B4513"/> <rect x="25" y="50" width="12" height="4" fill="#d2691e"/>'},
@@ -79,35 +80,43 @@ const utensilios = [
     {nome:"Fouet", svg:'<line x1="32" y1="10" x2="32" y2="50" stroke="#000" stroke-width="2"/><line x1="28" y1="50" x2="36" y2="50" stroke="#000" stroke-width="2"/>'}
 ];
 
+// Ingredientes da massa (proporcional aos ovos)
 const ingredientes = [
-    {nome: "Farinha de trigo", pesoPorOvo: 50},
-    {nome: "Açúcar", pesoPorOvo: 40},
-    {nome: "Margarina", pesoPorOvo: 30},
-    {nome: "Leite", pesoPorOvo: 20},
-    {nome: "Fermento", pesoPorOvo: 5},
+    {nome: "Açúcar refinado", pesoPorOvo: 66.7},
+    {nome: "Ovos", pesoPorOvo: 50},
+    {nome: "Leite semidesnatado", pesoPorOvo: 83.3},
+    {nome: "Óleo vegetal", pesoPorOvo: 30},
+    {nome: "Cacau em pó 32%", pesoPorOvo: 26.7},
+    {nome: "Farinha de trigo", pesoPorOvo: 83.3},
+    {nome: "Fermento químico", pesoPorOvo: 7},
+    {nome: "Sal", pesoPorOvo: 1.67}
 ];
 
+// Passos da receita
 const passosExtras = [
-    "Unte a forma com margarina.",
-    "Se quiser, polvilhe um pouco de farinha para não grudar.",
+    "Untar o molde com 10 g de margarina e polvilhar 10 g de farinha.",
     "Pré-aqueça o forno a 180°C.",
-    "Misture todos os ingredientes da massa.",
-    "Coloque a massa na forma.",
-    "Asse por 25-35 minutos ou até dourar.",
-    "Retire do forno e deixe esfriar antes de desenformar.",
-    "Coloque a cobertura (sempre a mesma quantidade)."
+    "Misture todos os ingredientes da massa até ficar homogênea.",
+    "Coloque a massa no molde.",
+    "Asse por 45 minutos a 180°C. Deixe esfriar antes de desenformar.",
+    "Prepare a cobertura: derreta 20 g de margarina e dissolva 30 g de cacau em pó.",
+    "Adicione 395 g de leite condensado e 200 g de creme de leite. Cozinhe até obter ponto de cobertura cremosa.",
+    "Deixe esfriar levemente e aplique sobre o bolo.",
+    "Finalize com 48 g de granulado de chocolate Melken."
 ];
 
 function mostrarMisenplace() {
     let html = `<h2>Prepare seu misenplace!</h2><div class="utensilios-container">`;
-    utensilios.forEach((u, i) => {
+    utensilios.forEach((u) => {
         html += `
             <div class="utensilio">
-                <svg viewBox="0 0 64 64" data-idx="${i}">${u.svg}</svg>
+                <svg viewBox="0 0 64 64">${u.svg}</svg>
                 <span>${u.nome}</span>
             </div>`;
     });
-    html += `</div>`;
+    html += `<h3>Ingredientes que você vai usar:</h3><ul>` +
+        ingredientes.map(i => `<li>${i.nome}</li>`).join('') +
+        `</ul>`;
     content.innerHTML = html;
 
     document.querySelectorAll('.utensilio svg').forEach(svg => {
@@ -115,9 +124,7 @@ function mostrarMisenplace() {
             svg.classList.add('clicked');
             const todos = [...document.querySelectorAll('.utensilio svg')]
                 .every(s => s.classList.contains('clicked'));
-            if (todos) {
-                mostrarFome();
-            }
+            if (todos) mostrarFome();
         });
     });
 }
@@ -142,7 +149,8 @@ function mostrarProximoPasso() {
         let ing = ingredientes[passoAtual];
         let div = document.createElement("div");
         div.className = "ingredient";
-        div.innerText = `Adicione ${ing.pesoPorOvo * ovos}g de ${ing.nome}`;
+        let peso = (ing.pesoPorOvo * ovos).toFixed(1);
+        div.innerText = `Adicione ${peso} g de ${ing.nome}`;
         div.addEventListener("click", () => {
             passoAtual++;
             mostrarProximoPasso();
@@ -161,7 +169,7 @@ function mostrarProximoPasso() {
         content.innerHTML = "";
         content.appendChild(div);
     } else {
-        content.innerHTML = "<h2>Seu bolinho está pronto! 🍰</h2>";
+        content.innerHTML = "<h2>Seu Pastel de Chocolate com Brigadeiro está pronto! 🍫🍰</h2>";
     }
 }
 
