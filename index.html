@@ -26,24 +26,17 @@
         transform: scale(1.2);
         opacity: 0.5;
     }
-    button {
-        display: block;
-        margin: 20px auto;
-        padding: 10px 20px;
-        font-size: 18px;
+    .ingredient, .step, .choice {
+        font-size: 20px;
+        margin: 20px 0;
         cursor: pointer;
-        border: none;
+        padding: 10px;
         border-radius: 8px;
-        background-color: #ff9933;
-        color: white;
+        background: #ffedcc;
         transition: background 0.3s;
     }
-    button:hover {
-        background-color: #ff6600;
-    }
-    .ingredient, .step {
-        font-size: 18px;
-        margin: 15px 0;
+    .ingredient:hover, .step:hover, .choice:hover {
+        background: #ffd699;
     }
     .utensilios-container {
         display: flex;
@@ -105,66 +98,74 @@ const passosExtras = [
     "Coloque a cobertura (sempre a mesma quantidade)."
 ];
 
-function mostrarMisenplaceVisual() {
-    content.innerHTML = `<h2>Prepare seu misenplace!</h2><div class="utensilios-container">`;
+function mostrarMisenplace() {
+    let html = `<h2>Prepare seu misenplace!</h2><div class="utensilios-container">`;
     utensilios.forEach((u, i) => {
-        content.innerHTML += `
-            <div class="utensilio" onclick="marcarUtensilio(this)">
-                <svg viewBox="0 0 64 64">${u.svg}</svg>
+        html += `
+            <div class="utensilio">
+                <svg viewBox="0 0 64 64" data-idx="${i}">${u.svg}</svg>
                 <span>${u.nome}</span>
             </div>`;
     });
-    content.innerHTML += `</div>
-        <h3>Ingredientes:</h3>
-        <ul>${ingredientes.map(i => `<li>${i.nome}</li>`).join("")}</ul>
-        <button id="prontoBtn" disabled>Pronto, vamos cozinhar!</button>
-    `;
+    html += `</div>`;
+    content.innerHTML = html;
 
-    // agora o botão ganha o listener corretamente
-    document.getElementById('prontoBtn').addEventListener('click', mostrarFome);
-}
-
-function marcarUtensilio(el) {
-    el.querySelector('svg').classList.toggle('clicked');
-    const todosClicados = [...document.querySelectorAll('.utensilio svg')]
-        .every(s => s.classList.contains('clicked'));
-    document.getElementById('prontoBtn').disabled = !todosClicados;
+    document.querySelectorAll('.utensilio svg').forEach(svg => {
+        svg.addEventListener('click', () => {
+            svg.classList.add('clicked');
+            const todos = [...document.querySelectorAll('.utensilio svg')]
+                .every(s => s.classList.contains('clicked'));
+            if (todos) {
+                mostrarFome();
+            }
+        });
+    });
 }
 
 function mostrarFome() {
-    content.innerHTML = "<h2>Qual é o tamanho da sua fome?</h2>" +
-        "<button onclick='setFome(1)'>Pequena (1 ovo)</button>" +
-        "<button onclick='setFome(2)'>Média (2 ovos)</button>" +
-        "<button onclick='setFome(3)'>Grande (3 ovos)</button>";
-}
-
-function setFome(n) {
-    ovos = n;
-    passoAtual = 0;
-    mostrarProximoPasso();
+    content.innerHTML = "<h2>Qual é o tamanho da sua fome?</h2>";
+    ["Pequena (1 ovo)", "Média (2 ovos)", "Grande (3 ovos)"].forEach((txt, i) => {
+        const div = document.createElement("div");
+        div.className = "choice";
+        div.innerText = txt;
+        div.addEventListener("click", () => {
+            ovos = i + 1;
+            passoAtual = 0;
+            mostrarProximoPasso();
+        });
+        content.appendChild(div);
+    });
 }
 
 function mostrarProximoPasso() {
     if (passoAtual < ingredientes.length) {
         let ing = ingredientes[passoAtual];
-        content.innerHTML = `<div class="ingredient">Adicione ${ing.pesoPorOvo * ovos}g de ${ing.nome}.</div>` +
-            `<button onclick="proximoIngrediente()">Próximo ingrediente</button>`;
+        let div = document.createElement("div");
+        div.className = "ingredient";
+        div.innerText = `Adicione ${ing.pesoPorOvo * ovos}g de ${ing.nome}`;
+        div.addEventListener("click", () => {
+            passoAtual++;
+            mostrarProximoPasso();
+        });
+        content.innerHTML = "";
+        content.appendChild(div);
     } else if (passoAtual - ingredientes.length < passosExtras.length) {
         let passo = passosExtras[passoAtual - ingredientes.length];
-        content.innerHTML = `<div class="step">${passo}</div>` +
-            `<button onclick="proximoIngrediente()">Próximo passo</button>`;
+        let div = document.createElement("div");
+        div.className = "step";
+        div.innerText = passo;
+        div.addEventListener("click", () => {
+            passoAtual++;
+            mostrarProximoPasso();
+        });
+        content.innerHTML = "";
+        content.appendChild(div);
     } else {
         content.innerHTML = "<h2>Seu bolinho está pronto! 🍰</h2>";
     }
 }
 
-function proximoIngrediente() {
-    passoAtual++;
-    mostrarProximoPasso();
-}
-
-// Primeiro clique mostra misenplace visual
-bolo.addEventListener('click', mostrarMisenplaceVisual);
+bolo.addEventListener('click', mostrarMisenplace);
 </script>
 
 </body>
