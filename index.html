@@ -76,7 +76,7 @@
 const content = document.getElementById('content');
 const bolo = document.getElementById('bolo');
 
-let ovos = 2;
+let ovos = 2; 
 let passoAtual = 0;
 
 const utensilios = [
@@ -117,13 +117,17 @@ function mostrarMisenplaceVisual() {
     content.innerHTML += `</div>
         <h3>Ingredientes:</h3>
         <ul>${ingredientes.map(i => `<li>${i.nome}</li>`).join("")}</ul>
-        <button id="prontoBtn" onclick="mostrarFome()" disabled>Pronto, vamos cozinhar!</button>
+        <button id="prontoBtn" disabled>Pronto, vamos cozinhar!</button>
     `;
+
+    // agora o botão ganha o listener corretamente
+    document.getElementById('prontoBtn').addEventListener('click', mostrarFome);
 }
 
 function marcarUtensilio(el) {
     el.querySelector('svg').classList.toggle('clicked');
-    const todosClicados = [...document.querySelectorAll('.utensilio svg')].every(s => s.classList.contains('clicked'));
+    const todosClicados = [...document.querySelectorAll('.utensilio svg')]
+        .every(s => s.classList.contains('clicked'));
     document.getElementById('prontoBtn').disabled = !todosClicados;
 }
 
@@ -165,4 +169,3 @@ bolo.addEventListener('click', mostrarMisenplaceVisual);
 
 </body>
 </html>
-
