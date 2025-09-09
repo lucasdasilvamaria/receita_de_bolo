@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bolo de Chocolate Interativo</title>
+<title>Pastel de Chocolate Interativo</title>
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -57,7 +57,7 @@ svg.clicked {
 </head>
 <body>
 
-<h1>Vamos fazer um Bolo de Chocolate?</h1>
+<h1>Vamos fazer um Pastel de Chocolate?</h1>
 <svg id="bolo" viewBox="0 0 64 64">
   <circle cx="32" cy="32" r="30" fill="#d2691e" stroke="#8B4513" stroke-width="4"/>
   <circle cx="32" cy="32" r="20" fill="#fff0d4"/>
@@ -72,7 +72,7 @@ const bolo = document.getElementById('bolo');
 let ovos = 2; 
 let passoAtual = 0;
 
-// Utensílios incluindo panela, pincel de silicone e balança
+// Utensílios completos
 const utensilios = [
     {nome:"Bacia grande", svg:'<circle cx="32" cy="32" r="30" fill="#c0c0c0"/> <circle cx="32" cy="32" r="20" fill="#fff"/>'},
     {nome:"Espátula", svg:'<rect x="28" y="10" width="6" height="40" fill="#8B4513"/> <rect x="25" y="50" width="12" height="4" fill="#d2691e"/>'},
@@ -83,7 +83,7 @@ const utensilios = [
     {nome:"Panela", svg:'<rect x="16" y="20" width="32" height="24" fill="#888"/><rect x="24" y="10" width="16" height="10" fill="#555"/>'}
 ];
 
-// Ingredientes da massa (proporcional aos ovos), exceto ovos
+// Ingredientes da massa (proporcional aos ovos)
 const ingredientes = [
     {nome: "Açúcar refinado", pesoPorOvo: 67},
     {nome: "Leite semidesnatado", pesoPorOvo: 83},
@@ -94,15 +94,15 @@ const ingredientes = [
     {nome: "Sal", pesoPorOvo: 2}
 ];
 
-// Passos da receita
+// Passos extras (forno, ovos, cobertura, montagem)
 const passosExtras = [
-    "Ligue o forno a 180°C antes de começar a preparar a massa.",
+    "Ligue o forno a 180°C antes de começar a adicionar os ingredientes.",
     "Unte o molde com 10 g de margarina e polvilhar 10 g de farinha usando o pincel de silicone.",
-    "Misture todos os ingredientes da massa até ficar homogênea.",
     "Adicione os ovos: {ovos} unidade(s).",
     "Coloque a massa no molde.",
     "Asse por 45 minutos a 180°C. Deixe esfriar antes de desenformar.",
-    "Prepare a cobertura: derreta 20 g de margarina na panela e dissolva 30 g de cacau em pó.",
+    "Prepare a cobertura passo a passo:",
+    "Derreta 20 g de margarina na panela e dissolva 30 g de cacau em pó.",
     "Adicione 395 g de leite condensado e 200 g de creme de leite. Cozinhe até obter ponto de cobertura cremosa.",
     "Deixe esfriar levemente e aplique sobre o bolo.",
     "Finalize com 48 g de granulado de chocolate Melken."
@@ -149,10 +149,11 @@ function mostrarFome() {
 
 function mostrarProximoPasso() {
     if (passoAtual < ingredientes.length) {
+        // Ingredientes da massa, um por um
         let ing = ingredientes[passoAtual];
         let div = document.createElement("div");
         div.className = "ingredient";
-        let peso = Math.round(ing.pesoPorOvo * ovos / 5) * 5; // arredondar para múltiplo de 5
+        let peso = Math.round(ing.pesoPorOvo * ovos / 5) * 5; // arredonda múltiplo de 5
         div.innerText = `Adicione ${peso} g de ${ing.nome}`;
         div.addEventListener("click", () => {
             passoAtual++;
@@ -160,7 +161,9 @@ function mostrarProximoPasso() {
         });
         content.innerHTML = "";
         content.appendChild(div);
+
     } else if (passoAtual - ingredientes.length < passosExtras.length) {
+        // Passos extras: forno, ovos (unidades), cobertura, granulado
         let passo = passosExtras[passoAtual - ingredientes.length];
         passo = passo.replace("{ovos}", ovos);
         let div = document.createElement("div");
@@ -172,8 +175,9 @@ function mostrarProximoPasso() {
         });
         content.innerHTML = "";
         content.appendChild(div);
+
     } else {
-        content.innerHTML = "<h2>Seu Bolo de Chocolate com Brigadeiro está pronto! 🍫🍰</h2>";
+        content.innerHTML = "<h2>Seu Pastel de Chocolate com Brigadeiro está pronto! 🍫🍰</h2>";
     }
 }
 
